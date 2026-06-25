@@ -3,6 +3,8 @@ const app = require("./src/app.js")
 
 const connectDB = require('./src/config/db.js')
 
+const PORT = process.env.PORT || 5000
+
 const startServer = async () => {
 
     try {
@@ -12,7 +14,7 @@ const startServer = async () => {
         console.log(error)
     }
     
-    app.listen(5000, () => {
+    app.listen(PORT, () => {
         console.log("server is running")
     })
 
