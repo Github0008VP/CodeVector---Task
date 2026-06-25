@@ -14,17 +14,29 @@ const seedProducts = async () => {
   try {
     await Product.deleteMany();
 
-    const products = [];
+    const batchSize = 5000;   // instead of pushing items at one time, we are making batches
 
-    for (let i = 1; i <= 200000; i++) {
-      products.push({
-        name: `Product ${i}`,
-        category: categories[Math.floor(Math.random() * categories.length)],
-        price: parseInt(Math.random() * 1000),
-      });
+    let productNumber = 1;
+
+    for(let i =1; i <= 40; i++) {
+
+        const products = [];
+        
+        for (let i = 1; i <= batchSize; i++) {
+          products.push({
+            name: `Product ${productNumber}`,
+            category: categories[Math.floor(Math.random() * categories.length)],
+            price: parseInt(Math.random() * 1000),
+          });
+
+          productNumber++;
+        }
+
+        await Product.insertMany(products);
     }
 
-    await Product.insertMany(products);
+
+
 
     console.log("200000 products inserted");
 
