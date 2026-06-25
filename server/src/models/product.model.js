@@ -22,6 +22,11 @@ const productSchema = new mongoose.Schema({
 {timestamps: true}
 );
 
+productSchema.index({
+  category: 1,
+  _id: -1
+});
+
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = Product;
