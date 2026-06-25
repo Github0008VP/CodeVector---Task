@@ -11,7 +11,7 @@ const getProducts = async (req, res) => {
         const query = {};
 
         if(cursor) {
-            query.id = {$lt: cursor};
+            query._id = {$lt: cursor};
         }
 
         if(category) {
@@ -19,14 +19,24 @@ const getProducts = async (req, res) => {
         }
 
         const products = await Product.find(query)
-            .sort({createdAt: -1})
-            .limit(limit)
+            .sort({_id: -1})
+            .limit(limit + 1)
+            .lean()   // for performace
 
-        let nextCursor = null;
+            
+            // let nextCursor = null;
+            
+            // if(products.length > 0) {
+            //     nextCursor = products[products.length - 1]._id;
+            // }
 
-        if(products.length > 0) {
-            nextCursor = products[products.length - 1]._id;
-        }
+            const hasMore = products.length > limit;
+            
+            if(hasMore) {
+                products.pop();
+            }
+
+            const nextCursor = hasMore? products[products.length-1]._id : null;
 
         res.status(200).json({
             success: true,
