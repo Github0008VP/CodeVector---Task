@@ -8,6 +8,6 @@ app.get("/", (req, res) => {
     res.send("hi, server is live......")
 })
 
-app.get('/api/products', productRoutes)
+app.use('/api/products', productRoutes)
 
 module.exports = app
