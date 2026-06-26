@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// Get API base URL from environment variable or use localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
 export default function Products() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -29,7 +32,7 @@ export default function Products() {
         params.append('cursor', cursor)
       }
       
-      const url = `/api/products?${params.toString()}`
+      const url = `${API_BASE_URL}/api/products?${params.toString()}`
       
       const response = await fetch(url)
       
@@ -77,10 +80,12 @@ export default function Products() {
       // Extract the path and query from the URL
       let urlToFetch = customUrl.trim()
       
-      // If it's a full URL, extract just the path and query
+      // If it's a full URL, use as-is
       if (urlToFetch.startsWith('http://') || urlToFetch.startsWith('https://')) {
-        const url = new URL(urlToFetch)
-        urlToFetch = url.pathname + url.search
+        // Use as-is
+      } else {
+        // If it's a relative path, prepend API_BASE_URL
+        urlToFetch = `${API_BASE_URL}${urlToFetch}`
       }
       
       const response = await fetch(urlToFetch)
